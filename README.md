@@ -33,6 +33,12 @@ Or checkout the sources and run ``setup.py`` yourself:
 $ python setup.py install
 ```
 
+Or:
+
+```
+$ pip install .
+```
+
 ### Troubleshooting
 
 If you get a warning that looks like this:
@@ -55,6 +61,14 @@ library and include files for the underyling ``TA-Lib`` library using the
 $ export TA_LIBRARY_PATH=$PREFIX/lib
 $ export TA_INCLUDE_PATH=$PREFIX/include
 $ python setup.py install # or pip install ta-lib
+```
+
+Or:
+
+```sh
+$ export TA_LIBRARY_PATH="${VIRTUAL_ENV}/lib"
+$ export TA_INCLUDE_PATH="${VIRTUAL_ENV}/include"
+$ pip install -e .
 ```
 
 Sometimes installation will produce build errors like this:
@@ -274,10 +288,10 @@ etc):
 import talib
 
 # list of functions
-print talib.get_functions()
+print(talib.get_functions())
 
 # dict of functions by group
-print talib.get_function_groups()
+print(talib.get_function_groups())
 ```
 
 ### Indicator Groups

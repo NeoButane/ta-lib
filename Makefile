@@ -32,7 +32,7 @@ perf:
 	python tools/perf_talib.py
 
 test: build
-	LD_LIBRARY_PATH=${VIRTUAL_ENV}/lib:/usr/local/lib:${LD_LIBRARY_PATH} nosetests
+	LD_LIBRARY_PATH=${VIRTUAL_ENV}/lib:${VIRTUAL_ENV}/usr/lib:/lib:/usr/local/lib:${LD_LIBRARY_PATH} nosetests
 
 sdist:
 	python setup.py sdist --formats=gztar,zip
