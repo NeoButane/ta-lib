@@ -4,6 +4,18 @@ import sys
 import os
 import warnings
 
+# Check if shell is currently in a virtual environment
+# https://stackoverflow.com/a/40099080
+try:
+    os.environ['VIRTUAL_ENV']
+except KeyError:
+    print('VIRTUAL_ENV not set, exiting')
+    exit()
+
+_install_prefix = os.environ['VIRTUAL_ENV']
+#_include_prefix = os.environ['VIRTUAL_ENV'] + '/include'
+#_lib_prefix = os.environ['VIRTUAL_ENV'] + /
+
 from distutils.dist import Distribution
 
 display_option_names = Distribution.display_option_names + ['help', 'help-commands']
@@ -26,6 +38,8 @@ for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
     if prefix in sys.platform:
         platform_supported = True
         include_dirs = [
+            _install_prefix + '/include',
+            _install_prefix + '/usr/include',
             '/usr/include',
             '/usr/local/include',
             '/opt/include',
@@ -33,8 +47,15 @@ for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
         ]
         if 'TA_INCLUDE_PATH' in os.environ:
             include_dirs.append(os.environ['TA_INCLUDE_PATH'])
+        else:
+            print("Remember to set TA_INCLUDE_PATH in your virtual environment!")
+            include_dirs.append(['VIRTUAL_ENV'])
         lib_talib_dirs = [
-            '/usr/lib',
+            _install_prefix + '/lib',
+            _install_prefix + '/lib64',
+            _install_prefix + '/usr/lib',
+            _install_prefix + '/lib',
+            _install_prefix + '/usr/lib64',
             '/usr/local/lib',
             '/usr/lib64',
             '/usr/local/lib64',
@@ -46,6 +67,9 @@ for prefix in ['darwin', 'linux', 'bsd', 'sunos']:
             if runtime_lib_dirs:
                 runtime_lib_dirs = runtime_lib_dirs.split(os.pathsep)
                 lib_talib_dirs.extend(runtime_lib_dirs)
+        else:
+           TA_LIBRARY_PATH = _install_prefix + '/lib'
+           print("Remember to set TA_LIBRARY_PATH in your virtual environment!")
         break
 
 if sys.platform == "win32":
@@ -127,3 +151,8 @@ setup(
     cmdclass = cmdclass,
     **requires
 )
+
+if 'TA_INCLUDE_PATH' not in os.environ:
+   print("\033[1;31;40mRemember to set TA_INCLUDE_PATH in your virtual environment!")
+if 'TA_LIBRARY_PATH' not in os.environ:
+    print("\033[1;31;40mRemember to set TA_LIBRARY_PATH in your virtual environment!")
